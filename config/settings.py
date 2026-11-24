@@ -39,7 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'accounts',  
     'music', 
-    'shop',
+    'shop', 
+    "shop_memory.apps.ShopMemoryConfig",
 ]
 
 MIDDLEWARE = [
@@ -156,3 +157,7 @@ MAILERS = {
         'BACKEND': 'django.core.mail.backends.console.EmailBackend',
     },
 }
+
+SHOP_MEMORY_EMBEDDING_MODEL = (
+    "intfloat/multilingual-e5-small"
+)
