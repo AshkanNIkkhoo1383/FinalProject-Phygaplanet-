@@ -1,0 +1,34 @@
+{% extends 'shop_memory/admin_panel/base.html' %}
+{% block title %}نمای کلی{% endblock %}
+{% block page_heading %}نمای کلی حافظه فروشگاه{% endblock %}
+{% block content %}
+<div class="welcome-row"><div><span class="pill pill-lime">MIKE · SHOP ASSISTANT</span><h2>سلام، {{ request.user.get_short_name|default:request.user.username }}! 👋</h2><p>وضعیت دانش فروشگاه، بازیابی و درخواست‌های پشتیبانی را از اینجا مدیریت کن.</p></div><div class="welcome-mark">♛</div></div>
+<div class="stats-grid">
+  <article class="stat-card lime"><div class="stat-top"><span>حافظه محصولات</span><span class="stat-icon">▣</span></div><strong>{{ product_memory_count }}</strong><small>رکورد متصل به محصولات Shop</small></article>
+  <article class="stat-card purple"><div class="stat-top"><span>اسناد دانش</span><span class="stat-icon">✦</span></div><strong>{{ knowledge_count }}</strong><small>{{ pending_chunks }} قطعه در انتظار Embedding</small></article>
+  <article class="stat-card pink"><div class="stat-top"><span>ارجاع‌های منتظر</span><span class="stat-icon">◉</span></div><strong>{{ pending_handoffs }}</strong><small>درخواست نیازمند رسیدگی انسانی</small></article>
+  <article class="stat-card teal"><div class="stat-top"><span>کالاهای درخواستی</span><span class="stat-icon">♡</span></div><strong>{{ requested_count }}</strong><small>تقاضاهای ثبت‌شده کاربران</small></article>
+</div>
+<div class="content-grid two-col">
+  <section class="panel"><div class="panel-heading"><div><span class="section-kicker">MEMORY TIERS</span><h3>توزیع سطح اهمیت حافظه</h3></div><a href="{% url 'shop_memory_admin:product_memories' %}" class="text-link">مشاهده همه</a></div>
+    <div class="tier-list">
+      <div class="tier-row"><span class="tier-dot frequent"></span><span>پرمراجعه</span><div class="bar"><i style="width:{% if product_memory_count %}{% widthratio frequent_count product_memory_count 100 %}{% else %}0{% endif %}%"></i></div><strong>{{ frequent_count }}</strong></div>
+      <div class="tier-row"><span class="tier-dot normal"></span><span>معمولی</span><div class="bar"><i style="width:{% if product_memory_count %}{% widthratio normal_count product_memory_count 100 %}{% else %}0{% endif %}%"></i></div><strong>{{ normal_count }}</strong></div>
+      <div class="tier-row"><span class="tier-dot low"></span><span>کم‌مراجعه</span><div class="bar"><i style="width:{% if product_memory_count %}{% widthratio low_count product_memory_count 100 %}{% else %}0{% endif %}%"></i></div><strong>{{ low_count }}</strong></div>
+    </div>
+    <p class="muted-note">این سطح‌ها برای اولویت بازیابی و سیاست نگهداری حافظه استفاده می‌شوند؛ حذف حافظه به‌تنهایی محصول اصلی فروشگاه را حذف نمی‌کند.</p>
+  </section>
+  <section class="panel llm-panel"><div class="panel-heading"><div><span class="section-kicker">MODEL STATUS</span><h3>مدل زبانی فعال</h3></div><span class="status-dot"></span></div>
+    {% if active_llm %}<div class="model-name">{{ active_llm.model_name }}</div><div class="model-meta"><span class="tag">{{ active_llm.get_provider_display }}</span><span class="tag">دما: {{ active_llm.temperature }}</span></div><p class="muted-note">{{ active_llm.name }} · سقف خروجی {{ active_llm.max_output_tokens }} توکن</p>{% else %}<div class="empty-state"><strong>مدلی فعال نشده است.</strong><p>برای اتصال Mike یک مدل محلی یا API فعال کن.</p></div>{% endif %}
+    <a href="{% url 'shop_memory_admin:llm_configurations' %}" class="button button-secondary">مدیریت مدل‌ها</a>
+  </section>
+</div>
+<div class="content-grid two-col lower-grid">
+  <section class="panel"><div class="panel-heading"><div><span class="section-kicker">SUPPORT QUEUE</span><h3>آخرین درخواست‌های ارجاع‌شده</h3></div><a href="{% url 'shop_memory_admin:handoffs' %}" class="text-link">صف پشتیبانی</a></div>
+    {% for item in recent_handoffs %}<div class="compact-row"><div class="compact-icon pink-icon">◉</div><div class="compact-main"><strong>{{ item.user_message|truncatechars:62 }}</strong><small>{{ item.created_at|date:'Y/m/d H:i' }} · {{ item.get_reason_display }}</small></div><span class="status-chip status-{{ item.status }}">{{ item.get_status_display }}</span></div>{% empty %}<div class="empty-state">درخواستی برای نمایش وجود ندارد.</div>{% endfor %}
+  </section>
+  <section class="panel"><div class="panel-heading"><div><span class="section-kicker">KNOWLEDGE BASE</span><h3>آخرین اسناد دانش</h3></div><a href="{% url 'shop_memory_admin:knowledge_list' %}" class="text-link">مدیریت دانش</a></div>
+    {% for item in recent_knowledge %}<div class="compact-row"><div class="compact-icon purple-icon">✦</div><div class="compact-main"><strong>{{ item.title }}</strong><small>{{ item.get_knowledge_type_display }} · {{ item.updated_at|date:'Y/m/d' }}</small></div><span class="status-chip status-{{ item.status }}">{{ item.get_status_display }}</span></div>{% empty %}<div class="empty-state">هنوز سند دانشی ثبت نشده است.</div>{% endfor %}
+  </section>
+</div>
+{% endblock %}

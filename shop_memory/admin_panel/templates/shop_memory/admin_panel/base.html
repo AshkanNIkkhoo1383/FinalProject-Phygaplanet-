@@ -1,0 +1,59 @@
+{% load static %}
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}مدیریت Shop Memory{% endblock %} | PhygaPlanet</title>
+  <link rel="stylesheet" href="{% static 'shop_memory/admin_panel/css/main.css' %}">
+</head>
+<body>
+<div class="admin-shell">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="{% url 'shop_memory_admin:dashboard' %}">
+      <span class="brand-crown">♛</span>
+      <span><strong>PhygaPlanet</strong><small>MEMORY CONTROL</small></span>
+    </a>
+    <div class="sidebar-caption">مرکز مدیریت Mike</div>
+    <nav class="nav-menu" aria-label="منوی مدیریت">
+      <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'shop_memory_admin:dashboard' %}"><span>▦</span> نمای کلی</a>
+      <a class="nav-link {% if request.resolver_match.url_name == 'product_memories' %}active{% endif %}" href="{% url 'shop_memory_admin:product_memories' %}"><span>▣</span> حافظه محصولات</a>
+      <a class="nav-link {% if 'knowledge' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'shop_memory_admin:knowledge_list' %}"><span>✦</span> دانش و FAQ / RAG</a>
+      <a class="nav-link {% if request.resolver_match.url_name == 'requested_products' %}active{% endif %}" href="{% url 'shop_memory_admin:requested_products' %}"><span>♡</span> کالاهای درخواستی</a>
+      <a class="nav-link {% if 'handoff' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'shop_memory_admin:handoffs' %}"><span>◉</span> ارجاع به پشتیبان</a>
+      <a class="nav-link {% if 'llm' in request.resolver_match.url_name %}active{% endif %}" href="{% url 'shop_memory_admin:llm_configurations' %}"><span>⌘</span> تنظیمات LLM</a>
+    </nav>
+    <div class="sidebar-bottom">
+      <div class="mike-mini"><span class="mike-face">M</span><div><strong>Mike</strong><small>Shop Assistant</small></div><span class="online-dot"></span></div>
+      <a class="back-link" href="/admin/">رفتن به Django Admin ↗</a>
+    </div>
+  </aside>
+
+  <main class="main-area">
+    <header class="topbar">
+      <button class="mobile-menu" type="button" onclick="document.getElementById('sidebar').classList.toggle('open')" aria-label="باز کردن منو">☰</button>
+      <div><span class="eyebrow">PHYGAPLANET / SHOP MEMORY</span><h1>{% block page_heading %}مرکز کنترل حافظه فروشگاه{% endblock %}</h1></div>
+      <div class="topbar-user"><span class="avatar">{{ request.user.username|first|upper }}</span><span><strong>{{ request.user.get_full_name|default:request.user.username }}</strong><small>مدیر سیستم</small></span></div>
+    </header>
+
+    {% if messages %}
+      <div class="messages" aria-live="polite">
+        {% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}
+      </div>
+    {% endif %}
+
+    <section class="page-content">
+      {% block content %}{% endblock %}
+    </section>
+    <footer class="footer"><span>♛ PhygaPlanet</span><span>یک سیاره، سه شخصیت، یک تجربه شخصی</span><span>SHOP MEMORY CONTROL CENTER</span></footer>
+  </main>
+</div>
+<script>
+  document.querySelectorAll('[data-confirm]').forEach(function (form) {
+    form.addEventListener('submit', function (event) {
+      if (!window.confirm(form.getAttribute('data-confirm'))) event.preventDefault();
+    });
+  });
+</script>
+</body>
+</html>

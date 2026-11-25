@@ -1,0 +1,7 @@
+{% extends 'shop_memory/admin_panel/base.html' %}
+{% block title %}رسیدگی به درخواست{% endblock %}
+{% block page_heading %}رسیدگی به درخواست انسانی{% endblock %}
+{% block content %}
+<div class="panel request-detail"><span class="pill pill-pink">{{ handoff.get_reason_display }}</span><h2>پیام ثبت‌شده توسط کاربر</h2><blockquote>{{ handoff.user_message }}</blockquote><div class="detail-meta"><span>کد: {{ handoff.reference_id }}</span><span>ثبت: {{ handoff.created_at|date:'Y/m/d H:i' }}</span><span>کاربر: {% if handoff.user %}{{ handoff.user.username }}{% else %}مهمان{% endif %}</span></div>{% if handoff.classification_reason %}<div class="classification-note"><strong>توضیح طبقه‌بندی مدل:</strong> {{ handoff.classification_reason }}</div>{% endif %}</div>
+<form method="post" class="panel form-panel">{% csrf_token %}<h3>اطلاعات رسیدگی</h3><div class="form-grid">{% for field in form %}<div class="form-field {% if field.name == 'admin_note' %}wide{% endif %}"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</div>{% endfor %}</div><div class="form-actions"><a class="button button-ghost" href="{% url 'shop_memory_admin:handoffs' %}">بازگشت</a><button class="button button-primary" type="submit">ذخیره وضعیت</button></div></form>
+{% endblock %}

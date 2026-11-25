@@ -1,0 +1,10 @@
+{% extends 'shop_memory/admin_panel/base.html' %}
+{% block title %}ارجاع به پشتیبان{% endblock %}
+{% block page_heading %}صف درخواست‌های پشتیبانی{% endblock %}
+{% block content %}
+<div class="page-intro"><span class="pill pill-pink">HUMAN HANDOFF</span><p>درخواست‌هایی که خارج از محدوده Mike بوده‌اند یا به بررسی انسانی نیاز داشته‌اند. متن اصلی کاربر را بررسی و مسئول رسیدگی را مشخص کن.</p></div>
+<form method="get" class="filter-bar"><input type="search" name="q" value="{{ q }}" placeholder="جست‌وجوی متن درخواست یا کد پیگیری..."><select name="status"><option value="">همه وضعیت‌ها</option><option value="pending" {% if status == 'pending' %}selected{% endif %}>در انتظار</option><option value="in_progress" {% if status == 'in_progress' %}selected{% endif %}>در حال بررسی</option><option value="resolved" {% if status == 'resolved' %}selected{% endif %}>حل‌شده</option><option value="closed" {% if status == 'closed' %}selected{% endif %}>بسته‌شده</option></select><button class="button button-primary" type="submit">اعمال فیلتر</button></form>
+<div class="panel table-panel"><div class="table-wrap"><table><thead><tr><th>درخواست</th><th>کاربر</th><th>دلیل</th><th>وضعیت</th><th>مسئول</th><th>زمان ثبت</th><th>عملیات</th></tr></thead><tbody>
+{% for item in page_obj %}<tr><td><strong>{{ item.user_message|truncatechars:75 }}</strong><small class="table-sub">{{ item.reference_id }}</small></td><td>{% if item.user %}{{ item.user.username }}{% else %}مهمان{% endif %}</td><td>{{ item.get_reason_display }}</td><td><span class="status-chip status-{{ item.status }}">{{ item.get_status_display }}</span></td><td>{{ item.assigned_to.username|default:'تعیین نشده' }}</td><td>{{ item.created_at|date:'Y/m/d H:i' }}</td><td><a class="button button-small button-secondary" href="{% url 'shop_memory_admin:handoff_update' item.pk %}">بررسی درخواست</a></td></tr>{% empty %}<tr><td colspan="7"><div class="empty-state">درخواست ارجاع‌شده‌ای وجود ندارد.</div></td></tr>{% endfor %}
+</tbody></table></div>{% include 'shop_memory/admin_panel/pagination.html' %}</div>
+{% endblock %}

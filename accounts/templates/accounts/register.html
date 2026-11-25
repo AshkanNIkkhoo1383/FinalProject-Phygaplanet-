@@ -1,0 +1,54 @@
+
+{% extends "accounts/base_auth.html" %}
+
+{% block title %}ثبت‌نام | PhygaPlanet{% endblock %}
+
+{% block content %}
+
+<div class="form-heading">
+    <span class="form-label">CREATE YOUR ACCOUNT</span>
+    <h2>به دنیای خودت خوش آمدی!</h2>
+    <p>حساب خودت را بساز و تجربه شخصی‌ات را شروع کن.</p>
+</div>
+
+<form method="post" class="auth-form">
+    {% csrf_token %}
+
+    {% for field in form %}
+        <div class="form-group">
+
+            <label for="{{ field.id_for_label }}">
+                {{ field.label }}
+            </label>
+
+            {{ field }}
+
+            {% if field.help_text %}
+                <div class="help-text">{{ field.help_text|safe }}</div>
+            {% endif %}
+
+            {% for error in field.errors %}
+                <div class="field-error">{{ error }}</div>
+            {% endfor %}
+
+        </div>
+    {% endfor %}
+
+    {% if form.non_field_errors %}
+        <div class="field-error">
+            {{ form.non_field_errors }}
+        </div>
+    {% endif %}
+
+    <button type="submit" class="primary-button">
+        ساخت حساب کاربری
+        <span>←</span>
+    </button>
+</form>
+
+<div class="auth-switch">
+    قبلاً حساب ساخته‌ای؟
+    <a href="{% url 'accounts:login' %}">وارد شو</a>
+</div>
+
+{% endblock %}

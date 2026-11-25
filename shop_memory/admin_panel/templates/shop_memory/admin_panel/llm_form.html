@@ -1,0 +1,7 @@
+{% extends 'shop_memory/admin_panel/base.html' %}
+{% block title %}{{ page_title }}{% endblock %}
+{% block page_heading %}{{ page_title }}{% endblock %}
+{% block content %}
+<div class="page-intro"><span class="pill pill-purple">MODEL SETTINGS</span><p>یک مدل محلی یا API سازگار تعریف کن. برای تغییر مدل فعال، گزینه فعال را روشن کن؛ تنظیم فعال قبلی به‌صورت خودکار غیرفعال خواهد شد.</p></div>
+<form method="post" class="panel form-panel">{% csrf_token %}{% if form.non_field_errors %}<div class="form-errors">{{ form.non_field_errors }}</div>{% endif %}<div class="form-grid">{% for field in form %}<div class="form-field {% if field.name == 'base_url' or field.name == 'api_key_env' %}wide{% endif %}"><label for="{{ field.id_for_label }}">{{ field.label }}{% if field.field.required %}<span class="required">*</span>{% endif %}</label>{{ field }}{% if field.help_text %}<small class="help-text">{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<small class="field-error">{{ error }}</small>{% endfor %}</div>{% endfor %}</div><div class="form-actions"><a class="button button-ghost" href="{% url 'shop_memory_admin:llm_configurations' %}">انصراف</a><button class="button button-primary" type="submit">ذخیره تنظیمات</button></div></form>
+{% endblock %}
