@@ -1,0 +1,91 @@
+$ink: #17131F;
+$surface: #FFFFFF;
+$border: #E9DFD3;
+$muted: #756D7C;
+$purple: #8750D8;
+
+.shop-flash-message,
+.form-errors,
+.checkout-review-notice {
+  margin: 16px 0;
+  padding: 14px 16px;
+  border: 1px solid #e5d6bd;
+  border-radius: 12px;
+  background: #fff0c7;
+  color: $ink;
+  line-height: 1.9;
+}
+.form-errors {
+  ul { margin: 6px 0 0; padding-right: 20px; }
+  li { margin: 3px 0; }
+}
+.product-specifications dl,
+.buyer-summary {
+  display: grid;
+  gap: 8px;
+  margin: 18px 0;
+  > div {
+    display: flex;
+    justify-content: space-between;
+    gap: 18px;
+    padding: 12px 14px;
+    border: 1px solid $border;
+    border-radius: 10px;
+    background: $surface;
+  }
+  dt { color: $muted; }
+  dd { margin: 0; font-weight: 600; overflow-wrap: anywhere; }
+}
+.review-list { display: grid; gap: 12px; margin: 18px 0; }
+.product-review {
+  padding: 16px;
+  border: 1px solid $border;
+  border-radius: 14px;
+  background: $surface;
+  > div { display: flex; justify-content: space-between; gap: 12px; }
+  > div span { color: $purple; font-weight: 700; }
+  p { line-height: 1.9; }
+  small { color: $muted; }
+}
+.review-form-wrap {
+  margin-top: 24px;
+  padding: 20px;
+  border: 1px solid $border;
+  border-radius: 16px;
+  background: $surface;
+}
+.review-form { display: grid; gap: 10px; }
+.review-form input,
+.review-form select,
+.review-form textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #d9cedf;
+  border-radius: 10px;
+  background: $surface;
+  color: $ink;
+  font: inherit;
+}
+.review-form label { font-weight: 600; }
+.review-form button { justify-self: start; }
+.checkout-review-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1.5fr) minmax(280px, .8fr);
+  gap: 24px;
+  margin: 28px 0 64px;
+}
+.checkout-review-main,
+.checkout-summary {
+  padding: 22px;
+  border: 1px solid $border;
+  border-radius: 18px;
+  background: $surface;
+}
+.checkout-review-notice { margin-top: 0; }
+.checkout-review-notice p { margin: 5px 0 0; }
+.checkout-review-main h2 { margin-top: 18px; }
+@media (max-width: 760px) {
+  .checkout-review-layout { grid-template-columns: 1fr; }
+  .product-specifications dl > div,
+  .buyer-summary > div { align-items: flex-start; flex-direction: column; gap: 4px; }
+}

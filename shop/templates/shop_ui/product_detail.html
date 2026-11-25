@@ -1,0 +1,51 @@
+{% extends 'shop_ui/base.html' %}
+{% block title %}{{ product.name }} | PhygaPlanet{% endblock %}
+{% block content %}
+<section class="container detail-page">
+  <div class="breadcrumbs"><a href="{% block detail_home_url %}{% url 'shop:home' %}{% endblock %}">خانه</a><span>›</span><a href="{% block detail_shop_url %}{% url 'shop:product_list' %}{% endblock %}">فروشگاه</a><span>›</span><span>{{ product.name }}</span></div>
+  <div class="product-detail-layout">
+    <div class="detail-gallery">
+      <div class="detail-main-image visual-{{ product.visual_key|default:'album' }}">{% if product.image_url %}<img src="{{ product.image_url }}" alt="{{ product.name }}">{% else %}<span class="detail-emoji">{{ product.emoji|default:'♫' }}</span>{% endif %}{% if product.badge %}<span class="product-badge badge-lime">{{ product.badge }}</span>{% endif %}</div>
+      <div class="gallery-note"><span>✦</span> تصویر و جزئیات کالا را قبل از ثبت سفارش بررسی کن.</div>
+    </div>
+    <div class="detail-info">
+      <div class="detail-category"><span>{{ product.category_name|default:'یادگاری موسیقی' }}</span>{% if product.sku %}<span>کد کالا: {{ product.sku }}</span>{% endif %}</div>
+      <h1>{{ product.name }}</h1>
+      {% if product.artist_name %}<p class="detail-artist">{{ product.artist_name }}</p>{% endif %}
+      <div class="detail-price">{% if product.old_price %}<del>{{ product.old_price|floatformat:0 }} تومان</del>{% endif %}<strong>{{ product.price|floatformat:0 }} <small>تومان</small></strong></div>
+      <div class="detail-stock {% if product.is_in_stock %}in-stock{% else %}out-stock{% endif %}">{% if product.stock > 0 %}<span>●</span> موجود در فروشگاه <small>{{ product.stock }} عدد</small>{% elif product.is_in_stock %}<span>●</span> قابل سفارش{% else %}<span>●</span> در حال حاضر ناموجود{% endif %}</div>
+      <div class="detail-description">{% if product.description %}{{ product.description|linebreaks }}{% else %}<p>این محصول بخشی از مجموعه یادگاری‌های موسیقی PhygaPlanet است.</p>{% endif %}</div>
+      {% if product.is_in_stock %}
+      <div class="purchase-row"><div class="quantity-control" data-quantity-control><button type="button" data-quantity-minus aria-label="کم کردن تعداد">−</button><input type="number" min="1" max="{{ product.purchase_limit }}" value="1" data-quantity-value aria-label="تعداد"><button type="button" data-quantity-plus aria-label="زیاد کردن تعداد">+</button></div><button class="button button-primary add-to-cart-large" type="button" data-cart-add data-quantity-source="[data-quantity-value]" data-product-id="{{ product.id }}" data-product-name="{{ product.name|escape }}" data-product-price="{{ product.price }}" data-product-image="{{ product.image_url|default:'' }}" data-product-url="{{ product.detail_url|default:'#' }}">افزودن به سبد خرید <span>＋</span></button></div>
+      {% else %}<button class="button button-disabled" type="button" disabled>فعلاً ناموجود</button>{% endif %}
+      <div class="detail-perks"><div><span>♧</span><b>بسته‌بندی امن</b><small>مناسب نگهداری و هدیه</small></div><div><span>↗</span><b>پیگیری سفارش</b><small>از فضای شخصی جویی</small></div><div><span>✦</span><b>راهنمای خرید</b><small>با کمک مایک</small></div></div>
+      <div class="detail-mike"><span class="mike-mini">M</span><p><b>هنوز مطمئن نیستی؟</b><br>از مایک درباره این کالا سؤال کن.</p><a href="{% block detail_mike_url %}#{% endblock %}">گفت‌وگو <span>←</span></a></div>
+    </div>
+  </div>
+</section>
+{% if product.specifications %}
+<section class="container section-block product-specifications">
+  <div class="section-heading"><div><span class="section-kicker">PRODUCT DETAILS</span><h2>مشخصات کالا</h2></div></div>
+  <dl>{% for key, value in product.specifications.items %}<div><dt>{{ key }}</dt><dd>{{ value }}</dd></div>{% endfor %}</dl>
+</section>
+{% endif %}
+<section class="container section-block product-reviews" id="reviews">
+  <div class="section-heading"><div><span class="section-kicker">COMMUNITY NOTES</span><h2>نظر طرفدارها</h2></div></div>
+  <div class="review-list">
+    {% for review in reviews %}<article class="product-review"><div><strong>{{ review.title|default:'نظر خریدار' }}</strong><span>{{ review.rating }} از ۵</span></div><p>{{ review.comment|linebreaksbr }}</p><small>{{ review.user.get_full_name|default:review.user.username }}</small></article>
+    {% empty %}<p class="muted-note">هنوز نظری برای این کالا ثبت نشده است.</p>{% endfor %}
+  </div>
+  <div class="review-form-wrap"><h3>تجربه‌ات را بنویس</h3>
+    {% if user.is_authenticated %}
+      <form method="post" action="{% url 'shop:submit_review' product.slug %}" class="review-form">{% csrf_token %}
+        {% if review_form.errors %}<div class="form-errors" role="alert">{{ review_form.errors }}</div>{% endif %}
+        <label for="id_rating">امتیاز</label>{{ review_form.rating }}
+        <label for="id_title">عنوان</label>{{ review_form.title }}
+        <label for="id_comment">نظر</label>{{ review_form.comment }}
+        <button class="button button-primary" type="submit">ثبت نظر</button>
+      </form>
+    {% else %}<p>برای ثبت نظر ابتدا وارد حساب کاربری‌ات شو.</p>{% endif %}
+  </div>
+</section>
+<section class="related-section"><div class="container section-block"><div class="section-heading"><div><span class="section-kicker">YOU MAY ALSO LIKE</span><h2>شاید این‌ها هم <em>به دلت بنشینند.</em></h2></div></div><div class="product-grid">{% for product in related_products %}{% include 'shop_ui/partials/product_card.html' with product=product %}{% empty %}<p class="muted-note">پیشنهاد مرتبطی در حال حاضر وجود ندارد.</p>{% endfor %}</div></div></section>
+{% endblock %}

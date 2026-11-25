@@ -1,0 +1,18 @@
+{% extends 'shop_ui/base.html' %}
+{% block title %}تکمیل سفارش | PhygaPlanet{% endblock %}
+{% block content %}
+<section class="page-hero page-hero-compact"><div class="container"><div class="breadcrumbs"><a href="{% block checkout_home_url %}{% url 'shop:home' %}{% endblock %}">خانه</a><span>›</span><a href="{% block checkout_cart_url %}{% url 'shop:cart' %}{% endblock %}">سبد خرید</a><span>›</span><span>تکمیل سفارش</span></div><span class="section-kicker">ONE LAST STEP</span><h1>اطلاعاتت را <em>ثبت کن.</em></h1><p>برای ارسال درست سفارش، اطلاعات زیر را کامل کن.</p></div></section>
+<section class="container checkout-layout">
+  <form class="checkout-form" method="post" action="{{ checkout_submit_url }}" data-checkout-form>
+    {% csrf_token %}<input type="hidden" name="cart_payload" value="{{ form.cart_payload.value|default:'' }}">
+    {% if form.errors %}<div class="form-errors" role="alert">{{ form.errors }}</div>{% endif %}
+    <div class="checkout-form-section"><div class="form-section-title"><span>01</span><div><h2>اطلاعات گیرنده</h2><p>مشخصات تماس و تحویل سفارش</p></div></div>
+      <div class="form-grid"><div class="form-field"><label for="full-name">نام و نام خانوادگی</label><input id="full-name" name="full_name" type="text" autocomplete="name" required placeholder="نام گیرنده" value="{{ form.full_name.value|default:'' }}"></div><div class="form-field"><label for="phone">شماره موبایل</label><input id="phone" name="phone" type="tel" autocomplete="tel" required placeholder="۰۹۱۲۱۲۳۴۵۶۷" value="{{ form.phone.value|default:'' }}" pattern="[0-9۰-۹+()\- ]{10,15}"></div><div class="form-field form-field-wide"><label for="province-city">استان و شهر</label><input id="province-city" name="city" type="text" required placeholder="مثلاً کرمان، کرمان" value="{{ form.city.value|default:'' }}"></div><div class="form-field form-field-wide"><label for="address">نشانی کامل</label><textarea id="address" name="address" rows="3" autocomplete="street-address" required placeholder="خیابان، کوچه، پلاک و واحد">{{ form.address.value|default:'' }}</textarea></div><div class="form-field"><label for="postal-code">کد پستی</label><input id="postal-code" name="postal_code" type="text" inputmode="numeric" maxlength="10" placeholder="۱۰ رقم" value="{{ form.postal_code.value|default:'' }}"></div><div class="form-field"><label for="order-note">یادداشت سفارش <small>(اختیاری)</small></label><input id="order-note" name="note" type="text" placeholder="نکته‌ای برای بسته‌بندی یا ارسال" value="{{ form.note.value|default:'' }}"></div></div>
+    </div>
+    <div class="checkout-form-section"><div class="form-section-title"><span>02</span><div><h2>روش پرداخت</h2><p>روش پرداخت پس از اتصال درگاه فعال می‌شود.</p></div></div><label class="payment-option is-selected"><input type="radio" name="payment_method" value="online" checked><span class="payment-icon">▣</span><span><b>پرداخت آنلاین</b><small>اتصال درگاه پرداخت در نسخه نهایی</small></span><i>✓</i></label></div>
+    <div class="checkout-note"><span>✦</span><p>این صفحه در حال حاضر رابط کاربری است. ثبت سفارش و پرداخت واقعی باید به منطق سمت سرور و درگاه معتبر متصل شود.</p></div>
+    <button class="button button-primary submit-order-button" type="submit">تأیید اطلاعات و ادامه <span>←</span></button>
+  </form>
+  <aside class="checkout-summary"><span class="section-kicker">YOUR ORDER</span><h2>خلاصه خرید</h2><div data-checkout-items class="checkout-items"><p class="muted-note">سبد خرید از مرورگر خوانده می‌شود.</p></div><div class="summary-line summary-total"><span>جمع کالاها</span><strong data-checkout-total>۰ تومان</strong></div><p class="summary-security">هزینه ارسال و مبلغ نهایی در سمت سرور محاسبه و تأیید می‌شود.</p></aside>
+</section>
+{% endblock %}

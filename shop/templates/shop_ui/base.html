@@ -1,0 +1,76 @@
+{% load static %}
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#17131F">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{% block title %}فروشگاه | PhygaPlanet{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'shop_ui/css/shop.css' %}">
+  <link rel="stylesheet" href="{% static 'shop_ui/css/shop_backend.css' %}">
+  {% block extra_head %}{% endblock %}
+</head>
+<body class="shop-site" data-cart-track-url="{% url 'shop:track_cart' %}">
+  <a class="skip-link" href="#main-content">رفتن به محتوای اصلی</a>
+  <div class="announcement-bar">
+    <span class="announcement-dot" aria-hidden="true"></span>
+    <span>دنیای یادگاری‌های موسیقی؛ کم ولی کافی، دقیقاً مطابق سلیقه‌ات</span>
+    <span class="announcement-spark" aria-hidden="true">✦</span>
+  </div>
+
+  <header class="site-header">
+    <div class="container header-inner">
+      <a class="brand" href="{% block home_url %}{% url 'shop:home' %}{% endblock %}" aria-label="PhygaPlanet - صفحه اصلی">
+        <span class="brand-crown" aria-hidden="true">♛</span>
+        <span class="brand-wordmark">Phyga<span>Planet</span><small>YOUR WORLD, SMARTER</small></span>
+      </a>
+
+      <nav class="main-nav" aria-label="منوی اصلی">
+        <a class="nav-link" href="{% block music_url %}#{% endblock %}">موسیقی <span>♫</span></a>
+        <a class="nav-link is-active" href="{% block shop_url %}{% url 'shop:product_list' %}{% endblock %}">فروشگاه</a>
+        <a class="nav-link" href="{% block ai_url %}#{% endblock %}">دستیار هوشمند <span>✦</span></a>
+        <a class="nav-link" href="{% block profile_url %}#{% endblock %}">پروفایل</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="icon-button search-shortcut" href="{% block search_url %}{% url 'shop:product_list' %}{% endblock %}" aria-label="جستجو">⌕</a>
+        <a class="cart-link" href="{% block cart_url %}{% url 'shop:cart' %}{% endblock %}" aria-label="سبد خرید">
+          <span class="cart-icon" aria-hidden="true">🛒</span>
+          <span class="cart-label">سبد خرید</span>
+          <span class="cart-count" data-cart-count>0</span>
+        </a>
+        <button class="mobile-menu-toggle" type="button" aria-label="باز کردن منو" aria-expanded="false" data-menu-toggle>☰</button>
+      </div>
+    </div>
+    <div class="mobile-nav" data-mobile-nav hidden>
+      <a href="{% block mobile_shop_url %}{% url 'shop:product_list' %}{% endblock %}">فروشگاه</a>
+      <a href="{% block mobile_music_url %}#{% endblock %}">موسیقی</a>
+      <a href="{% block mobile_ai_url %}#{% endblock %}">دستیار هوشمند</a>
+      <a href="{% block mobile_profile_url %}#{% endblock %}">پروفایل</a>
+    </div>
+  </header>
+
+  <main id="main-content" class="main-content">
+    {% if messages %}<div class="container" aria-live="polite">{% for message in messages %}<p class="shop-flash-message">{{ message }}</p>{% endfor %}</div>{% endif %}
+    {% block content %}{% endblock %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-main">
+      <div class="footer-brand-block">
+        <a class="brand brand-footer" href="#top"><span class="brand-crown" aria-hidden="true">♛</span><span class="brand-wordmark">Phyga<span>Planet</span><small>YOUR WORLD, SMARTER</small></span></a>
+        <p>یک سیاره برای موسیقی، یادگاری‌ها و تجربه‌ای شخصی‌تر.</p>
+      </div>
+      <div class="footer-column"><strong>فروشگاه</strong><a href="{% block footer_all_products_url %}{% url 'shop:product_list' %}{% endblock %}">همه کالاها</a><a href="{% block footer_albums_url %}{% url 'shop:product_list' %}?type=album{% endblock %}">آلبوم فیزیکی</a><a href="{% block footer_posters_url %}{% url 'shop:product_list' %}?type=poster{% endblock %}">پوستر و ماگ</a></div>
+      <div class="footer-column"><strong>راهنمای خرید</strong><a href="{% block footer_shipping_url %}#{% endblock %}">ارسال سفارش</a><a href="{% block footer_returns_url %}#{% endblock %}">بازگشت کالا</a><a href="{% block footer_contact_url %}#{% endblock %}">ارتباط با ما</a></div>
+      <div class="footer-mike"><span class="mike-sticker">MIKE <b>✦</b></span><strong>کمتر بگرد، بهتر انتخاب کن.</strong><p>مایک برای پیدا کردن یادگاری مناسب کنارت است.</p></div>
+    </div>
+    <div class="container footer-bottom"><span>© PhygaPlanet — تمام حقوق محفوظ است.</span><span>ساخته‌شده برای طرفداران موسیقی <b>♫</b></span></div>
+  </footer>
+
+  <div class="toast-region" aria-live="polite" aria-atomic="true" data-toast-region></div>
+  <script src="{% static 'shop_ui/js/shop.js' %}" defer></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

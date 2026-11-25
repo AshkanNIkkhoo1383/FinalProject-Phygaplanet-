@@ -1,0 +1,6 @@
+{% extends 'shop_ui/base.html' %}
+{% block title %}سفارش ثبت شد | PhygaPlanet{% endblock %}
+{% block content %}
+<section class="container success-page"><div class="success-confetti" aria-hidden="true">✦　♫　✧</div><div class="success-icon" aria-hidden="true">✓</div><span class="section-kicker">THANK YOU FOR YOUR ORDER</span><h1>یک یادگاری تازه،<br><em>در راه توست!</em></h1><p>سفارش تو با موفقیت ثبت شد. جزئیات و وضعیت ارسال را می‌توانی از بخش سفارش‌های پروفایلت دنبال کنی.</p><div class="order-number">شماره سفارش <strong>{{ order_number|default:'—' }}</strong></div><div class="success-actions"><a class="button button-primary" href="{% block success_home_url %}{% url 'shop:home' %}{% endblock %}">بازگشت به فروشگاه <span>←</span></a><a class="button button-outline" href="{% block success_orders_url %}#{% endblock %}">پیگیری سفارش</a></div></section>
+<script>try { localStorage.removeItem("phygaplanet_shop_cart_v1"); } catch (e) { /* storage may be disabled */ }</script>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends 'shop_ui/base.html' %}
+{% block title %}بررسی اطلاعات سفارش | PhygaPlanet{% endblock %}
+{% block content %}
+<section class="page-hero page-hero-compact"><div class="container"><div class="breadcrumbs"><a href="{% url 'shop:home' %}">خانه</a><span>›</span><a href="{% url 'shop:cart' %}">سبد خرید</a><span>›</span><span>بررسی اطلاعات</span></div><span class="section-kicker">SERVER-SIDE VALIDATION</span><h1>اطلاعاتت <em>بررسی شد.</em></h1><p>قیمت و موجودی کالاها از پایگاه داده بررسی شده است؛ این مرحله هنوز سفارش را ثبت نمی‌کند.</p></div></section>
+<section class="container checkout-review-layout">
+  <div class="checkout-review-main">
+    <div class="checkout-review-notice"><strong>مرحله ثبت نهایی هنوز متصل نیست.</strong><p>مدل سفارش و فرایند پرداخت در کدهایی که تا اینجا فرستادی وجود نداشت. برای جلوگیری از نمایش موفقیت غیرواقعی، سفارش در این مرحله ذخیره نشده است.</p></div>
+    <h2>اطلاعات گیرنده</h2>
+    <dl class="buyer-summary"><div><dt>نام</dt><dd>{{ buyer_data.full_name }}</dd></div><div><dt>موبایل</dt><dd>{{ buyer_data.phone }}</dd></div><div><dt>شهر</dt><dd>{{ buyer_data.city }}</dd></div><div><dt>نشانی</dt><dd>{{ buyer_data.address }}</dd></div>{% if buyer_data.postal_code %}<div><dt>کد پستی</dt><dd>{{ buyer_data.postal_code }}</dd></div>{% endif %}{% if buyer_data.note %}<div><dt>یادداشت</dt><dd>{{ buyer_data.note }}</dd></div>{% endif %}</dl>
+    <a class="button button-outline" href="{% url 'shop:checkout' %}">بازگشت به اطلاعات سفارش</a>
+  </div>
+  <aside class="checkout-summary"><span class="section-kicker">VALIDATED CART</span><h2>اقلام سبد</h2>
+    {% for item in cart.lines %}<div class="checkout-mini-item"><span>{{ item.product.name }} × {{ item.quantity }}</span><b>{{ item.line_total_display|floatformat:0 }} تومان</b></div>{% endfor %}
+    <div class="summary-line summary-total"><span>جمع کالاها</span><strong>{{ cart.subtotal_display|floatformat:0 }} تومان</strong></div>
+    <p class="summary-security">هزینه ارسال، تخفیف و مبلغ نهایی باید در منطق سفارش سمت سرور محاسبه شوند.</p>
+  </aside>
+</section>
+{% endblock %}

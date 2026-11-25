@@ -1,0 +1,24 @@
+{% extends 'shop_ui/base.html' %}
+{% block title %}همه کالاها | فروشگاه PhygaPlanet{% endblock %}
+{% block content %}
+<section class="page-hero page-hero-compact"><div class="container"><div class="breadcrumbs"><a href="{% block list_home_url %}{% url 'shop:home' %}{% endblock %}">خانه</a><span>›</span><span>فروشگاه</span></div><span class="section-kicker">THE SHOP / ALL FINDS</span><h1>چیزهای خوب برای <em>طرفدارهای واقعی.</em></h1><p>از آلبوم و پوستر تا یادگاری‌های کوچک؛ انتخابت را پیدا کن.</p></div></section>
+<section class="container catalog-layout" data-catalog data-catalog-url="{% url 'shop:product_list' %}">
+  <aside class="filter-panel">
+    <div class="filter-title"><h2>فیلتر کالاها</h2><button type="button" class="filter-reset" data-filter-reset>پاک کردن</button></div>
+    <label class="filter-label" for="catalog-search">جستجو</label><div class="search-field"><input id="catalog-search" type="search" placeholder="نام کالا یا هنرمند..." data-product-search value="{{ search_query|default:'' }}"><span>⌕</span></div>
+    <div class="filter-group"><h3>دسته‌بندی</h3><label class="filter-option"><input type="radio" name="category" value="all" {% if selected_category == 'all' or not selected_category %}checked{% endif %} data-category-filter><span>همه کالاها</span></label><label class="filter-option"><input type="radio" name="category" value="album" {% if selected_category == 'album' %}checked{% endif %} data-category-filter><span>آلبوم فیزیکی</span></label><label class="filter-option"><input type="radio" name="category" value="poster" {% if selected_category == 'poster' %}checked{% endif %} data-category-filter><span>پوستر و چاپ</span></label><label class="filter-option"><input type="radio" name="category" value="mug" {% if selected_category == 'mug' %}checked{% endif %} data-category-filter><span>ماگ و اکسسوری</span></label><label class="filter-option"><input type="radio" name="category" value="memorabilia" {% if selected_category == 'memorabilia' %}checked{% endif %} data-category-filter><span>یادگاری‌ها</span></label></div>
+    <div class="filter-group"><h3>وضعیت موجودی</h3><label class="filter-option"><input type="checkbox" data-stock-filter><span>فقط کالاهای موجود</span></label></div>
+    <div class="filter-group"><h3>محدوده قیمت</h3><div class="price-range-label"><span>تا</span><strong data-price-label>۵,۰۰۰,۰۰۰ تومان</strong></div><input class="range-input" type="range" min="100000" max="5000000" step="100000" value="5000000" data-price-filter aria-label="حداکثر قیمت"><div class="range-ends"><span>۱۰۰ هزار</span><span>۵ میلیون</span></div></div>
+    <div class="filter-tip"><span>✦</span><p>به دنبال کالای خاصی هستی؟ <b>مایک</b> می‌تواند راهنمایی‌ات کند.</p></div>
+  </aside>
+  <div class="catalog-main">
+    <div class="catalog-toolbar"><div><strong><span data-result-count>{{ products|length }}</span> کالا</strong><span class="toolbar-muted">برای کشف و انتخاب</span></div><label class="sort-control">مرتب‌سازی <select data-sort-products aria-label="مرتب‌سازی کالاها"><option value="recommended" {% if selected_sort == 'recommended' %}selected{% endif %}>پیشنهادی</option><option value="price-asc" {% if selected_sort == 'price-asc' %}selected{% endif %}>ارزان‌ترین</option><option value="price-desc" {% if selected_sort == 'price-desc' %}selected{% endif %}>گران‌ترین</option><option value="name" {% if selected_sort == 'name' %}selected{% endif %}>نام کالا</option></select></label></div>
+    <div class="active-filter-chips"><span>فروشگاه</span><span class="chip-lime">انتخاب‌های مایک</span></div>
+    <div class="product-grid catalog-product-grid" data-product-grid>
+      {% for product in products %}{% include 'shop_ui/partials/product_card.html' with product=product %}{% empty %}<div class="empty-products"><span>⌕</span><strong>هنوز محصولی در این دسته نیست.</strong><p>بعداً دوباره سر بزن؛ قفسه‌ها در حال آماده‌شدن هستند.</p></div>{% endfor %}
+    </div>
+    <div class="no-filter-results" data-no-results hidden><span>☁</span><strong>با این فیلتر چیزی پیدا نکردیم.</strong><p>فیلترها را کمی تغییر بده یا جستجوی دیگری امتحان کن.</p><button class="button button-outline" type="button" data-filter-reset>پاک کردن فیلترها</button></div>
+    {% if page_obj %}<nav class="pagination" aria-label="صفحه‌بندی">{% if page_obj.has_previous %}<a href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.previous_page_number }}" aria-label="صفحه قبل">→</a>{% endif %}<span>صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span>{% if page_obj.has_next %}<a href="?{% if querystring %}{{ querystring }}&{% endif %}page={{ page_obj.next_page_number }}" aria-label="صفحه بعد">←</a>{% endif %}</nav>{% endif %}
+  </div>
+</section>
+{% endblock %}

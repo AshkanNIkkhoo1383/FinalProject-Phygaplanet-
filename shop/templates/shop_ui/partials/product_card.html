@@ -1,0 +1,28 @@
+<article class="product-card" data-product-card
+  data-name="{{ product.name|default:''|escape }}"
+  data-category="{{ product.category_slug|default:''|escape }}"
+  data-price="{{ product.price|default:0 }}"
+  data-stock="{{ product.available_stock_flag|default:product.stock|default:0 }}">
+  <a class="product-visual visual-{{ product.visual_key|default:'album' }}" href="{{ product.detail_url|default:'#' }}" aria-label="مشاهده {{ product.name }}">
+    {% if product.image_url %}<img src="{{ product.image_url }}" alt="{{ product.name }}" loading="lazy">{% else %}<span class="visual-emoji" aria-hidden="true">{{ product.emoji|default:'♫' }}</span>{% endif %}
+    {% if product.badge %}<span class="product-badge {% if product.badge_kind %}badge-{{ product.badge_kind }}{% endif %}">{{ product.badge }}</span>{% endif %}
+    <span class="quick-view-hint">مشاهده کالا <span aria-hidden="true">←</span></span>
+  </a>
+  <div class="product-card-body">
+    <div class="product-meta"><span>{{ product.category_name|default:'یادگاری موسیقی' }}</span>{% if product.is_in_stock %}<span class="stock-dot"><i></i> موجود</span>{% else %}<span class="stock-dot is-out">ناموجود</span>{% endif %}</div>
+    <h3><a href="{{ product.detail_url|default:'#' }}">{{ product.name }}</a></h3>
+    {% if product.short_description %}<p class="product-description">{{ product.short_description }}</p>{% endif %}
+    <div class="product-card-bottom">
+      <div class="price-block">
+        {% if product.old_price %}<del>{{ product.old_price|floatformat:0 }} تومان</del>{% endif %}
+        <strong>{{ product.price|default:0|floatformat:0 }} <small>تومان</small></strong>
+      </div>
+      {% if product.is_in_stock %}
+        <button class="quick-add" type="button" aria-label="افزودن {{ product.name }} به سبد" data-cart-add
+          data-product-id="{{ product.id }}" data-product-name="{{ product.name|escape }}"
+          data-product-price="{{ product.price|default:0 }}" data-product-image="{{ product.image_url|default:'' }}"
+          data-product-url="{{ product.detail_url|default:'#' }}">+</button>
+      {% else %}<button class="quick-add is-disabled" type="button" disabled aria-label="ناموجود">−</button>{% endif %}
+    </div>
+  </div>
+</article>
