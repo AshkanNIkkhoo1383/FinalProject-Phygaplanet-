@@ -1,0 +1,4 @@
+{% extends 'music/base.html' %}{% block title %}{{ album.title }} | PhygaPlanet{% endblock %}{% block content %}
+<section class="profile-hero">{% if album.cover %}<img src="{{ album.cover.url }}" alt="{{ album.title }}">{% else %}<div class="artist-placeholder big">♫</div>{% endif %}<div><span class="eyebrow">ALBUM</span><h1>{{ album.title }}</h1><p>{% for artist in album.artists.all %}<a href="{% url 'music:artist_detail' artist.pk %}">{{ artist.name }}</a>{% if not forloop.last %}، {% endif %}{% endfor %}</p><p>{{ album.description }}</p></div></section>
+<section class="section-block"><div class="section-heading"><h2>ترک‌های آلبوم</h2></div><div class="song-grid">{% for song in songs %}{% include 'music/partials/song_card.html' %}{% empty %}<p class="empty-state">آهنگ منتشرشده‌ای در این آلبوم نیست.</p>{% endfor %}</div></section>
+{% endblock %}

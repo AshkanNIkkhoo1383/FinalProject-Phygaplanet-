@@ -1,0 +1,13 @@
+{% extends 'music/base.html' %}
+{% block title %}فهرست آهنگ‌ها | PhygaPlanet{% endblock %}
+{% block content %}
+<div class="page-intro"><span class="eyebrow">MUSIC LIBRARY</span><h1>{% if selected_genre %}آهنگ‌های {{ selected_genre.name }}{% else %}کتابخانه موسیقی{% endif %}</h1><p>آهنگ بعدی موردعلاقه‌ات را پیدا کن.</p></div>
+<div class="catalog-layout">
+    <aside class="filter-panel"><h3>ژانرها</h3><a class="filter-link" href="{% url 'music:song_list' %}">همه ژانرها</a>{% for genre in genres %}<a class="filter-link" href="{% url 'music:genre_songs' genre.id %}">{{ genre.name }}</a>{% endfor %}</aside>
+    <section class="catalog-main">
+        <form method="get" class="catalog-toolbar"><input type="search" name="q" value="{{ query }}" placeholder="نام آهنگ، هنرمند یا آلبوم..." aria-label="جستجوی آهنگ"><select name="sort" aria-label="مرتب‌سازی"><option value="newest" {% if sort == 'newest' %}selected{% endif %}>جدیدترین</option><option value="popular" {% if sort == 'popular' %}selected{% endif %}>محبوب‌ترین</option><option value="title" {% if sort == 'title' %}selected{% endif %}>نام آهنگ</option></select><button class="button button-small" type="submit">اعمال</button></form>
+        <div class="song-grid">{% for song in songs %}{% include 'music/partials/song_card.html' %}{% empty %}<div class="empty-state wide-empty"><strong>چیزی پیدا نشد!</strong><p>عبارت جستجو یا فیلتر ژانر را تغییر بده.</p></div>{% endfor %}</div>
+        {% if page_obj.paginator.num_pages > 1 %}<nav class="pagination" aria-label="صفحه‌بندی">{% if page_obj.has_previous %}<a href="?q={{ query|urlencode }}&sort={{ sort }}&page={{ page_obj.previous_page_number }}">قبلی</a>{% endif %}<span>صفحه {{ page_obj.number }} از {{ page_obj.paginator.num_pages }}</span>{% if page_obj.has_next %}<a href="?q={{ query|urlencode }}&sort={{ sort }}&page={{ page_obj.next_page_number }}">بعدی</a>{% endif %}</nav>{% endif %}
+    </section>
+</div>
+{% endblock %}

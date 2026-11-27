@@ -1,0 +1,37 @@
+{% extends 'music/base.html' %}
+{% block title %}{{ song.title }} | PhygaPlanet{% endblock %}
+{% block content %}
+<div class="breadcrumbs"><a href="{% url 'music:home' %}">موسیقی</a><span>/</span><a href="{% url 'music:song_list' %}">آهنگ‌ها</a><span>/</span><span>{{ song.title }}</span></div>
+<section class="song-detail" data-genre-theme="{{ genre_theme }}">
+    <div class="detail-top">
+        <div class="detail-cover-wrap">
+            <div class="detail-cover">{% if song.cover %}<img src="{{ song.cover.url }}" alt="جلد {{ song.title }}">{% elif song.album and song.album.cover %}<img src="{{ song.album.cover.url }}" alt="جلد {{ song.title }}">{% else %}<div class="cover-placeholder large">♫</div>{% endif %}<span class="cover-label">DJ AUSTIN SELECTS</span></div>
+            <div class="detail-tags">{% for genre in song.genres.all %}<a href="{% url 'music:genre_songs' genre.id %}">{{ genre.name }}</a>{% endfor %}{% if song.is_explicit %}<span class="tag explicit">Explicit</span>{% endif %}</div>
+        </div>
+        <div class="detail-copy">
+            <span class="eyebrow">NOW DISCOVERING</span><h1>{{ song.title }}</h1>
+            <div class="detail-artists">{% for artist in song.artists.all %}<a href="{% url 'music:artist_detail' artist.pk %}">{{ artist.name }}</a>{% if not forloop.last %}، {% endif %}{% endfor %}</div>
+            <div class="detail-meta">{% if song.album %}<a href="{% url 'music:album_detail' song.album.pk %}">{{ song.album.title }}</a>{% endif %}{% if song.release_date %}<span>{{ song.release_date|date:"Y" }}</span>{% endif %}{% if song.duration_seconds %}<span>{{ song.duration_seconds|floatformat:0 }} ثانیه</span>{% endif %}</div>
+            <p class="song-description">{{ song.description|default:song.ai_summary|default:"برای این آهنگ هنوز توضیحی ثبت نشده است." }}</p>
+            <div class="detail-actions">
+                <button type="button" class="button js-play-song" data-audio-url="{% url 'music:song_stream' song.slug %}" data-title="{{ song.title|escape }}" data-artist="{% for artist in song.artists.all %}{{ artist.name|escape }}{% if not forloop.last %}، {% endif %}{% endfor %}" data-cover="{% if song.cover %}{{ song.cover.url }}{% elif song.album and song.album.cover %}{{ song.album.cover.url }}{% endif %}" data-play-url="{% url 'music:track_play' song.slug %}">▶ پخش آهنگ</button>
+                {% if can_download %}<a class="button button-outline" href="{% url 'music:song_download' song.slug %}">↓ دانلود مجاز</a>{% else %}<span class="download-unavailable" title="مجوز دانلود برای این آهنگ فعال نیست">دانلود غیرفعال</span>{% endif %}
+                {% if user.is_authenticated %}<form method="post" action="{% url 'music:toggle_favorite' song.slug %}">{% csrf_token %}<input type="hidden" name="next" value="{{ request.path }}"><button class="button button-icon button-outline" type="submit">{% if is_favorite %}♥ ذخیره‌شده{% else %}♡ علاقه‌مندی{% endif %}</button></form>{% endif %}
+            </div>
+            {% if song.album %}<div class="album-mini"><span>از آلبوم</span><a href="{% url 'music:album_detail' song.album.pk %}">{{ song.album.title }}</a></div>{% endif %}
+        </div>
+    </div>
+    <div class="detail-insights">
+        <article class="insight-card ai-summary"><span class="insight-icon">✦</span><div><span class="eyebrow">AUSTIN'S TRACK NOTES</span><h3>درباره این آهنگ</h3><p>{{ song.ai_summary|default:song.description|default:"هنوز توضیح هوشمندی برای این آهنگ آماده نشده است." }}</p></div></article>
+        <article class="insight-card match-card">
+            <span class="eyebrow">YOUR MUSIC FIT</span><h3>چقدر با سلیقه تو جور است؟</h3>
+            {% if match %}<div class="match-score"><strong>{{ match.score }}<small>%</small></strong><div><b>{{ match.label }}</b><span>بر پایه {{ match.basis }}</span></div></div><div class="match-meter"><span style="width: {{ match.score }}%"></span></div><ul>{% for reason in match.reasons %}<li>{{ reason }}</li>{% endfor %}</ul>
+            {% elif user.is_authenticated %}<p>برای محاسبه درصد تطابق، سلیقه موسیقی‌ات را کامل‌تر کن. این امتیاز بر اساس ترجیحات موسیقی است، نه آزمون شخصیت‌شناسی.</p><a class="text-link" href="{% url 'music:taste_profile' %}">تکمیل پروفایل موسیقی ←</a>
+            {% else %}<p>با ورود و ثبت ژانرها و ترجیحات موسیقی، می‌توانیم میزان سازگاری این آهنگ با سلیقه‌ات را تخمین بزنیم.</p><a class="text-link" href="{% url 'accounts:login' %}?next={{ request.path }}">ورود برای پیشنهاد شخصی ←</a>{% endif %}
+        </article>
+    </div>
+    <div class="audio-facts"><div><span>انرژی</span><strong>{% if song.energy != None %}{{ song.energy|floatformat:2 }}{% else %}ثبت نشده{% endif %}</strong></div><div><span>رقص‌پذیری</span><strong>{% if song.danceability != None %}{{ song.danceability|floatformat:2 }}{% else %}ثبت نشده{% endif %}</strong></div><div><span>حال مثبت</span><strong>{% if song.valence != None %}{{ song.valence|floatformat:2 }}{% else %}ثبت نشده{% endif %}</strong></div><div><span>سرعت (BPM)</span><strong>{% if song.tempo_bpm %}{{ song.tempo_bpm }}{% else %}ثبت نشده{% endif %}</strong></div></div>
+    {% if song.mood_tags or song.activity_tags %}<div class="tag-panels">{% if song.mood_tags %}<div><h3>حال‌وهوا</h3>{% for tag in song.mood_tags %}<span class="tag">{{ tag }}</span>{% endfor %}</div>{% endif %}{% if song.activity_tags %}<div><h3>مناسب برای</h3>{% for tag in song.activity_tags %}<span class="tag">{{ tag }}</span>{% endfor %}</div>{% endif %}</div>{% endif %}
+</section>
+<section class="section-block"><div class="section-heading"><div><span class="eyebrow">KEEP THE VIBE</span><h2>شاید این‌ها را هم دوست داشته باشی</h2></div></div><div class="song-grid">{% for song in related_songs %}{% include 'music/partials/song_card.html' %}{% empty %}<p class="empty-state">پیشنهاد دیگری در دسترس نیست.</p>{% endfor %}</div></section>
+{% endblock %}

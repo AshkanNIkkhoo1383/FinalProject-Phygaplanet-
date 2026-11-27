@@ -1,0 +1,4 @@
+{% extends 'music/base.html' %}{% block title %}علاقه‌مندی‌ها | PhygaPlanet{% endblock %}{% block content %}
+<div class="page-intro"><span class="eyebrow">YOUR SAVED SOUNDS</span><h1>آهنگ‌های موردعلاقه من</h1><p>مجموعه‌ای از صداهایی که نگه داشته‌ای.</p></div>
+<div class="song-grid">{% for song in songs %}{% include 'music/partials/song_card.html' %}{% empty %}<p class="empty-state">هنوز آهنگی ذخیره نکرده‌ای. از صفحه جزئیات یک آهنگ آن را به علاقه‌مندی‌ها اضافه کن.</p>{% endfor %}</div>
+{% endblock %}

@@ -1,0 +1,21 @@
+<article class="song-card">
+    <a class="song-cover" href="{% url 'music:song_detail' song.slug %}">
+        {% if song.cover %}<img src="{{ song.cover.url }}" alt="جلد {{ song.title }}" loading="lazy">
+        {% elif song.album and song.album.cover %}<img src="{{ song.album.cover.url }}" alt="جلد {{ song.title }}" loading="lazy">
+        {% else %}<span class="cover-placeholder">♫</span>{% endif %}
+        {% if song.is_explicit %}<span class="explicit-badge">E</span>{% endif %}
+    </a>
+    <div class="song-card-body">
+        <div class="song-card-title"><a href="{% url 'music:song_detail' song.slug %}">{{ song.title }}</a></div>
+        <div class="song-card-artist">{% for artist in song.artists.all %}<a href="{% url 'music:artist_detail' artist.pk %}">{{ artist.name }}</a>{% if not forloop.last %}، {% endif %}{% empty %}هنرمند نامشخص{% endfor %}</div>
+        <div class="song-card-meta">{% for genre in song.genres.all %}<span class="tag">{{ genre.name }}</span>{% endfor %}{% if song.duration_seconds %}<span>{{ song.duration_seconds|floatformat:0 }} ثانیه</span>{% endif %}</div>
+        <div class="song-card-actions">
+            <button type="button" class="button button-small js-play-song"
+                data-audio-url="{% url 'music:song_stream' song.slug %}" data-title="{{ song.title|escape }}"
+                data-artist="{% for artist in song.artists.all %}{{ artist.name|escape }}{% if not forloop.last %}، {% endif %}{% endfor %}"
+                data-cover="{% if song.cover %}{{ song.cover.url }}{% elif song.album and song.album.cover %}{{ song.album.cover.url }}{% endif %}"
+                data-play-url="{% url 'music:track_play' song.slug %}">▶ پخش</button>
+            <a class="icon-link" href="{% url 'music:song_detail' song.slug %}" aria-label="جزئیات آهنگ">↗</a>
+        </div>
+    </div>
+</article>

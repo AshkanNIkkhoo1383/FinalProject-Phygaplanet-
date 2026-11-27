@@ -1,0 +1,5 @@
+{% extends 'music/base.html' %}{% block title %}{{ playlist.name }} | PhygaPlanet{% endblock %}{% block content %}
+<div class="page-intro"><span class="eyebrow">YOUR PLAYLIST</span><h1>{{ playlist.name }}</h1><p>{{ playlist.description }}</p></div>
+<section class="section-block"><h2>آهنگ‌های پلی‌لیست</h2><div class="song-grid">{% for song in songs %}{% include 'music/partials/song_card.html' %}{% empty %}<p class="empty-state">هنوز آهنگی به این پلی‌لیست اضافه نشده است.</p>{% endfor %}</div></section>
+{% if is_owner %}<section class="section-block"><h2>افزودن آهنگ</h2><div class="playlist-add-list">{% for song in available_songs %}<form method="post" class="playlist-add-row">{% csrf_token %}<input type="hidden" name="song_id" value="{{ song.pk }}"><span>{{ song.title }}</span><button class="button button-small" type="submit">+ افزودن</button></form>{% empty %}<p>آهنگ دیگری برای افزودن وجود ندارد.</p>{% endfor %}</div></section>{% endif %}
+{% endblock %}

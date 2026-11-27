@@ -1,0 +1,5 @@
+{% extends 'music/base.html' %}{% block title %}آلبوم‌ها | PhygaPlanet{% endblock %}{% block content %}
+<div class="page-intro"><span class="eyebrow">ALBUM COLLECTION</span><h1>آلبوم‌ها</h1><p>آهنگ‌ها را در قالب مجموعه‌های کامل کشف کن.</p></div>
+<form class="catalog-toolbar compact-toolbar" method="get"><input name="q" value="{{ query }}" placeholder="نام آلبوم یا هنرمند..."><button class="button button-small">جستجو</button></form>
+<div class="album-grid">{% for album in albums %}<a class="album-card" href="{% url 'music:album_detail' album.pk %}">{% if album.cover %}<img src="{{ album.cover.url }}" alt="{{ album.title }}">{% else %}<div class="cover-placeholder">♫</div>{% endif %}<strong>{{ album.title }}</strong><span>{% for artist in album.artists.all %}{{ artist.name }}{% if not forloop.last %}، {% endif %}{% endfor %}</span><small>{{ album.published_song_count }} آهنگ</small></a>{% empty %}<p class="empty-state">آلبومی پیدا نشد.</p>{% endfor %}</div>
+{% endblock %}

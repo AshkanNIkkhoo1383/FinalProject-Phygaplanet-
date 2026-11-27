@@ -1,0 +1,7 @@
+{% extends 'music/base.html' %}{% block title %}سلیقه موسیقی من | PhygaPlanet{% endblock %}{% block content %}
+<div class="page-intro"><span class="eyebrow">YOUR MUSIC DNA</span><h1>سلیقه موسیقی من</h1><p>این ترجیحات برای تخمین تناسب آهنگ‌ها و پیشنهادهای شخصی استفاده می‌شوند؛ شخصیت‌شناسی روان‌شناختی نیستند.</p></div>
+<form method="post" class="taste-form">{% csrf_token %}
+    {% for field in form %}<div class="form-field"><label for="{{ field.id_for_label }}">{{ field.label }}</label>{{ field }}{% if field.help_text %}<small>{{ field.help_text }}</small>{% endif %}{% for error in field.errors %}<span class="field-error">{{ error }}</span>{% endfor %}</div>{% endfor %}
+    <button class="button" type="submit">ذخیره سلیقه من</button>
+</form>
+{% endblock %}

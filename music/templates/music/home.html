@@ -1,0 +1,27 @@
+{% extends 'music/base.html' %}
+{% load static %}
+{% block title %}سیاره موسیقی تو | PhygaPlanet{% endblock %}
+{% block content %}
+<section class="music-hero">
+    <div class="hero-copy">
+        <span class="eyebrow">DJ AUSTIN · MUSIC DISCOVERY</span>
+        <h1>صدای خودت را<br><em>کشف کن.</em></h1>
+        <p>موسیقی تازه پیدا کن، با حال‌وهوایت هماهنگ شو و پلی‌لیست شخصی خودت را بساز.</p>
+        <div class="hero-actions"><a class="button" href="{% url 'music:song_list' %}">کشف همه آهنگ‌ها ←</a><a class="button button-outline" href="{% url 'music:artist_list' %}">هنرمندان</a></div>
+    </div>
+    <div class="hero-art" aria-hidden="true"><div class="vinyl-record"><div class="vinyl-center">♫</div></div><span class="spark spark-a">✦</span><span class="spark spark-b">♪</span><span class="hero-sticker">PLAY<br>YOUR<br>PLANET</span></div>
+</section>
+<section class="section-block">
+    <div class="section-heading"><div><span class="eyebrow">BROWSE BY VIBE</span><h2>از کجا شروع کنیم؟</h2></div><a href="{% url 'music:song_list' %}">همه آهنگ‌ها ←</a></div>
+    <div class="genre-strip">{% for genre in genres %}<a class="genre-chip" href="{% url 'music:genre_songs' genre.id %}"><span>♫</span>{{ genre.name }}</a>{% empty %}<p class="empty-state">هنوز ژانری ثبت نشده است.</p>{% endfor %}</div>
+</section>
+<section class="section-block">
+    <div class="section-heading"><div><span class="eyebrow">FRESH ROTATION</span><h2>تازه‌های موسیقی</h2></div><a href="{% url 'music:song_list' %}?sort=newest">مشاهده همه ←</a></div>
+    <div class="song-grid">{% for song in new_songs %}{% include 'music/partials/song_card.html' %}{% empty %}<p class="empty-state">هنوز آهنگ منتشرشده‌ای وجود ندارد.</p>{% endfor %}</div>
+</section>
+<section class="austin-callout"><div class="austin-avatar">DJ</div><div><span class="eyebrow">MEET DJ AUSTIN</span><h2>موسیقی باید با حال تو جور باشد.</h2><p>سلیقه‌ات را ثبت کن تا پیشنهادها بر اساس ژانر، انرژی و حال‌وهوای موسیقی دقیق‌تر شوند.</p></div><a class="button button-dark" href="{% if user.is_authenticated %}{% url 'music:taste_profile' %}{% else %}{% url 'accounts:register' %}{% endif %}">تنظیم سلیقه موسیقی</a></section>
+<section class="section-block">
+    <div class="section-heading"><div><span class="eyebrow">COMMUNITY FAVORITES</span><h2>محبوب بین شنونده‌ها</h2></div></div>
+    <div class="song-grid">{% for song in popular_songs %}{% include 'music/partials/song_card.html' %}{% empty %}<p class="empty-state">با شروع شنیدن آهنگ‌ها، این بخش کامل‌تر می‌شود.</p>{% endfor %}</div>
+</section>
+{% endblock %}

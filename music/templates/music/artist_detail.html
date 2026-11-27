@@ -1,0 +1,4 @@
+{% extends 'music/base.html' %}{% block title %}{{ artist.name }} | PhygaPlanet{% endblock %}{% block content %}
+<section class="profile-hero">{% if artist.photo %}<img src="{{ artist.photo.url }}" alt="{{ artist.name }}">{% else %}<div class="artist-placeholder big">♫</div>{% endif %}<div><span class="eyebrow">ARTIST PROFILE</span><h1>{{ artist.name }}</h1><p>{{ artist.bio|default:"زندگی‌نامه‌ای برای این هنرمند ثبت نشده است." }}</p></div></section>
+<section class="section-block"><div class="section-heading"><h2>آهنگ‌های {{ artist.name }}</h2></div><div class="song-grid">{% for song in songs %}{% include 'music/partials/song_card.html' %}{% empty %}<p class="empty-state">آهنگ منتشرشده‌ای برای این هنرمند وجود ندارد.</p>{% endfor %}</div></section>
+{% endblock %}

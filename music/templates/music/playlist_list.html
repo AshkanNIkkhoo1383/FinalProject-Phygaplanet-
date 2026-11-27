@@ -1,0 +1,4 @@
+{% extends 'music/base.html' %}{% block title %}پلی‌لیست‌های من | PhygaPlanet{% endblock %}{% block content %}
+<div class="page-intro"><span class="eyebrow">YOUR MIXTAPES</span><h1>پلی‌لیست‌های من</h1><p>برای هر حال‌وهوا یک مجموعه بساز.</p></div>
+<div class="playlist-layout"><section class="playlist-grid">{% for playlist in playlists %}<a class="playlist-card" href="{% url 'music:playlist_detail' playlist.pk %}"><span>♫</span><strong>{{ playlist.name }}</strong><small>{{ playlist.song_count }} آهنگ · {% if playlist.is_public %}عمومی{% else %}خصوصی{% endif %}</small></a>{% empty %}<p class="empty-state">هنوز پلی‌لیستی نساخته‌ای.</p>{% endfor %}</section><form method="post" class="playlist-form">{% csrf_token %}<h2>پلی‌لیست تازه</h2>{% for field in form %}<div class="form-field"><label>{{ field.label }}</label>{{ field }}{{ field.errors }}</div>{% endfor %}<button class="button" type="submit">ساخت پلی‌لیست</button></form></div>
+{% endblock %}

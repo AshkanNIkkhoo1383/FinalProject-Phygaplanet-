@@ -1,0 +1,4 @@
+{% extends 'music/base.html' %}{% block title %}تاریخچه شنیدن | PhygaPlanet{% endblock %}{% block content %}
+<div class="page-intro"><span class="eyebrow">YOUR LISTENING JOURNEY</span><h1>تاریخچه شنیدن</h1><p>رد آهنگ‌هایی که اخیراً گوش داده‌ای.</p></div>
+<div class="history-list">{% for item in interactions %}<a class="history-row" href="{% url 'music:song_detail' item.song.slug %}"><span class="history-note">♫</span><span><strong>{{ item.song.title }}</strong><small>{% for artist in item.song.artists.all %}{{ artist.name }}{% if not forloop.last %}، {% endif %}{% endfor %}</small></span><time>{{ item.created_at|date:"Y/m/d H:i" }}</time></a>{% empty %}<p class="empty-state">هنوز تاریخچه‌ای ثبت نشده است.</p>{% endfor %}</div>
+{% endblock %}

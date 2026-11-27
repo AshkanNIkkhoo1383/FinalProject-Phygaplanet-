@@ -10,7 +10,13 @@ from django.core.validators import (
 )
 from django.db import models
 from django.utils.text import slugify
-
+from .models_extra import (  # noqa: E402,F401
+    UserMusicProfile,
+    MusicInteraction,
+    FavoriteSong,
+    Playlist,
+    PlaylistSong,
+)
 
 # =====================================================
 # CONSTANTS

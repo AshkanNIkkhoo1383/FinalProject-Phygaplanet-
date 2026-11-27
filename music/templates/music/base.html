@@ -1,0 +1,50 @@
+{% load static %}
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <title>{% block title %}موسیقی | PhygaPlanet{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'music/css/music.css' %}">
+    {% block extra_head %}{% endblock %}
+</head>
+<body class="music-site" data-agent="austin">
+<header class="site-header">
+    <a class="brand-mark" href="{% url 'music:home' %}"><span class="brand-crown">♫</span><span>PhygaPlanet</span></a>
+    <nav class="main-nav" aria-label="ناوبری اصلی">
+        <a href="{% url 'music:home' %}" class="{% if request.resolver_match.url_name == 'home' %}active{% endif %}">خانه موسیقی</a>
+        <a href="{% url 'music:song_list' %}">آهنگ‌ها</a>
+        <a href="{% url 'music:artist_list' %}">هنرمندان</a>
+        <a href="{% url 'music:album_list' %}">آلبوم‌ها</a>
+        {% if user.is_authenticated %}<a href="{% url 'music:favorites' %}">علاقه‌مندی‌ها</a>{% endif %}
+    </nav>
+    <div class="header-actions">
+        <form class="header-search" action="{% url 'music:song_list' %}" method="get">
+            <input type="search" name="q" placeholder="جستجوی آهنگ یا هنرمند..." aria-label="جستجو">
+            <button type="submit" aria-label="جستجو">⌕</button>
+        </form>
+        {% if user.is_authenticated %}
+            <a class="header-avatar" href="{% url 'music:taste_profile' %}" title="پروفایل موسیقی">☺</a>
+        {% else %}
+            <a class="header-login" href="{% url 'accounts:login' %}">ورود</a>
+        {% endif %}
+    </div>
+</header>
+<main class="page-shell">
+    {% if messages %}<div class="messages">{% for message in messages %}<div class="message {{ message.tags }}">{{ message }}</div>{% endfor %}</div>{% endif %}
+    {% block content %}{% endblock %}
+</main>
+<footer class="site-footer">
+    <div><strong>PhygaPlanet</strong><span> · Your personal music planet</span></div>
+    <div class="footer-links"><a href="{% url 'music:history' %}">تاریخچه شنیدن</a><a href="{% url 'music:playlist_list' %}">پلی‌لیست‌های من</a><a href="{% url 'music:taste_profile' %}">سلیقه موسیقی</a></div>
+</footer>
+<div class="mini-player" id="mini-player">
+    <div class="player-track"><div class="player-disc">♫</div><div><strong id="player-title">هنوز آهنگی پخش نشده</strong><small id="player-artist">یک آهنگ را برای پخش انتخاب کن</small></div></div>
+    <audio id="global-audio" controls preload="none"></audio>
+    <span class="player-note">DJ AUSTIN · YOUR SOUND</span>
+</div>
+<script src="{% static 'music/js/music.js' %}" defer></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

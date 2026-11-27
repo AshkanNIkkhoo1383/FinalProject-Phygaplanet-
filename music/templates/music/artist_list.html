@@ -1,0 +1,5 @@
+{% extends 'music/base.html' %}{% block title %}هنرمندان | PhygaPlanet{% endblock %}{% block content %}
+<div class="page-intro"><span class="eyebrow">ARTIST UNIVERSE</span><h1>هنرمندان</h1><p>صداهایی که سیاره موسیقی را می‌سازند.</p></div>
+<form class="catalog-toolbar compact-toolbar" method="get"><input name="q" value="{{ query }}" placeholder="جستجوی هنرمند..."><button class="button button-small">جستجو</button></form>
+<div class="artist-grid">{% for artist in artists %}<a class="artist-card" href="{% url 'music:artist_detail' artist.pk %}">{% if artist.photo %}<img src="{{ artist.photo.url }}" alt="{{ artist.name }}">{% else %}<div class="artist-placeholder">♫</div>{% endif %}<strong>{{ artist.name }}</strong><span>{{ artist.published_song_count }} آهنگ منتشرشده</span></a>{% empty %}<p class="empty-state">هنرمندی پیدا نشد.</p>{% endfor %}</div>
+{% endblock %}
